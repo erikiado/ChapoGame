@@ -34,7 +34,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         fondo = new Background(BitmapFactory.decodeResource(getResources(),R.drawable.fondoverde));
-        player = new Player(BitmapFactory.decodeResource(getResources(),R.drawable.player),65,25,16);
+        player = new Player(BitmapFactory.decodeResource(getResources(),R.drawable.player),512/4,512/4,4);
 
         thread.setRunning(true);
         thread.start();
@@ -87,10 +87,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         if (player.getPlaying()) {
             fondo.update();
             player.update();
-
-
         }
-
     }
 
     @Override

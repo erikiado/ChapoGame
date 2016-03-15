@@ -52,16 +52,18 @@ public class Player extends GameObject{
         animation.update();
 
         if(up){
-            dy -= 1;
+            dy = (int) (dya-=1.1);
+            //dy -= 1;
         }else{
-            dy += 1;
+            dy = (int) (dya+=1.1);
+            //dy += 1;
         }
 
         if(dy>14) dy = 14;
         if(dy<-14) dy = -14;
 
         y += dy*2;
-
+        dy = 0;
     }
 
     public void draw(Canvas canvas){
