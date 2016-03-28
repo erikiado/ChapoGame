@@ -12,6 +12,7 @@ public class SmokeTrail extends GameObject {
     public int r;
 
     public SmokeTrail(int x, int y ){
+        r = 5;
         super.x = x;
         super.y = y;
     }

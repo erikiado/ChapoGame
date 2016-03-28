@@ -9,17 +9,18 @@ import android.graphics.Canvas;
 public class Player extends GameObject{
     private Bitmap spritesheet;
     private int score;
-    private double dya;
+    private double dy;
     private boolean playing;
-    private boolean up;
+    private boolean jump;
     private Animation animation;
     private long startTime;
 
     public Player(Bitmap b, int w, int h, int numFrames){
-        x = 100;
-        y = GamePanel.HEIGHT/2;
+        x = 400;
+        y = 450;
         dy = 0;
         score = 0;
+
         height = h;
         width = w;
         animation = new Animation();
@@ -37,10 +38,21 @@ public class Player extends GameObject{
 
     }
 
-    public void setUp(boolean b){
-        up = b;
+    public void setJump(boolean b){
+        jump = b;
     }
 
+    public boolean getJump(){
+        return jump;
+    }
+
+
+    public boolean onGround(){
+        if(y == 450){
+            return true;
+        }
+        return false;
+    }
     public void update(){
         long elapsed = (System.nanoTime() - startTime)/1000000;
 
@@ -51,17 +63,35 @@ public class Player extends GameObject{
 
         animation.update();
 
-        if(up){
-            dy -= 1;
+
+        if(onGround()){
+            if(dy > 0){
+                dy*=-0.5;
+            }
+            if(jump){
+                dy = -25;
+                jump=false;
+            }
         }else{
-            dy += 1;
+            dy += 1.1;
         }
 
-        if(dy>14) dy = 14;
-        if(dy<-14) dy = -14;
 
-        y += dy*2;
-        dy = 0;
+        if(y > 450){
+            dy = 0;
+            y = 450;
+        }
+//        if(up){
+//            dy -= 1;
+//        }else{
+//            dy += 1;
+//        }
+//
+//        if(dy>14) dy = 14;
+//        if(dy<-14) dy = -14;
+//
+        y += (int)(dy*2);
+
     }
 
     public void draw(Canvas canvas){
@@ -80,8 +110,8 @@ public class Player extends GameObject{
         playing = b;
     }
 
-    public void resetDYA(){
-        dya = 0;
+    public void resetDy(){
+        dy = 0;
     }
 
     public void resetScore(){
