@@ -11,6 +11,7 @@ import java.util.Random;
 public class Block extends GameObject{
     private int score;
     private int speed;
+    private boolean choco;
     private Random rand = new Random();
     private Animation animation = new Animation();
     private Bitmap spritesheet;
@@ -20,7 +21,7 @@ public class Block extends GameObject{
         super.y = y;
         width = w;
         height = h;
-        score = s;
+        choco = false;
 
         speed = 7 + (int)(rand.nextDouble()*score/30);
         if(speed > 40){
@@ -36,12 +37,16 @@ public class Block extends GameObject{
         }
 
         animation.setFrames(image);
-        animation.setDelay(100-speed);
+        animation.setDelay(100 - speed);
     }
 
     public void update(){
-        x -= speed;
-        animation.update();
+        if(!choco){
+            x -= speed;
+            animation.update();
+        }else{
+
+        }
     }
 
     public void draw(Canvas canvas){
@@ -52,13 +57,10 @@ public class Block extends GameObject{
         }
     }
 
-    public boolean colisionPlayer(GameObject player){
-        if(y <= player.getY()+player.getHeight() && y+height > player.getY()){
-            if(x > player.getX() && x <= player.getX()+player.getWidth()){
-                return true;
-            }
+    public void colisionPlayer(){
+        if(!choco){
+            choco = true;
         }
-        return false;
     }
 
 }

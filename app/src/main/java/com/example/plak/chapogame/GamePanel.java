@@ -104,14 +104,17 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     }
 
     public void update() {
+
+        //LOOP PRINCIPAL
         if (player.getPlaying()) {
+            //Actualizar/Mover fondo y jugador: Editar esto si quieres que se mueva distinto
             fondo.update();
             player.update();
 
-            long blockElapsed = (System.nanoTime() - blockStartTime)/1000000;
 
+            //Spawnear bloques dependiendo del tiempo
+            long blockElapsed = (System.nanoTime() - blockStartTime)/1000000;
             if(blockElapsed > (2000 - player.getScore()/4)){
-                System.out.println("Creando bloque");
                 if(blocks.size()==0){
                     blocks.add(new Block(BitmapFactory.decodeResource(getResources(),R.drawable.bloque),WIDTH+10,450,100,100,player.getScore(),1));
                 }else{
@@ -120,19 +123,40 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
                 blockStartTime = System.nanoTime();
             }
 
+            //Actualizar bloques
             for(int i =0; i <blocks.size();i++){
                 Block b = blocks.get(i);
                 b.update();
-                //fallInBlock(player,b);
-                if(b.colisionPlayer(player)){
+            }
+
+
+
+
+
+            //Revisar colision por bloque
+            for(int i = 0; i < blocks.size(); i++){
+                Block block = blocks.get(i);
+                if(colisionBloque(player,block)){
+
+
+                    block.colisionPlayer();
+                    switch(player.getPosition()){
+                        case 0:
+                            break;
+                        case 1:
+                        case 2:
+                            player.rollBack();
+                            break;
+                    }
                     player.setPlaying(false);
                     break;
                 }
-                if(b.getX() < -110){
+                if(block.getX() < -110){
                     blocks.remove(i);
                     break;
                 }
             }
+
 
             long elapsed = (System.nanoTime() - trailStartTime)/1000000;
             if(elapsed > 120) {
@@ -150,13 +174,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         }
     }
 
-    public void fallInBlock(GameObject player, GameObject b){
-        if(player.getX()+player.getWidth()>b.getX() && player.getX()<b.getX()+b.getWidth()){
-            if(player.getY()+player.getHeight()==b.getY()){
-                ((Player)player).resetDy();
-            }
-        }
-    }
 
     @Override
     public void draw(Canvas canvas){
@@ -176,5 +193,14 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
             canvas.restoreToCount(savedState);
         }
+    }
+
+    public boolean colisionBloque(GameObject player, GameObject block){
+        if(player.getX()+player.getWidth() >= block.getX() && player.getX() <= block.getX()+block.getWidth()){
+           if(player.getY()+player.getHeight() >= block.getY() && player.getY() <= block.getY()+block.getHeight()){
+               return true;
+           }
+        }
+        return false;
     }
 }

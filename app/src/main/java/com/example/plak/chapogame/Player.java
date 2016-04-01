@@ -14,13 +14,14 @@ public class Player extends GameObject{
     private boolean jump;
     private Animation animation;
     private long startTime;
+    private int position;
 
     public Player(Bitmap b, int w, int h, int numFrames){
         x = 400;
         y = 450;
         dy = 0;
         score = 0;
-
+        position = 2;
         height = h;
         width = w;
         animation = new Animation();
@@ -94,6 +95,11 @@ public class Player extends GameObject{
 
     }
 
+    public void rollBack(){
+        position --;
+        x-=50;
+    }
+
     public void draw(Canvas canvas){
         canvas.drawBitmap(animation.getImage(),x,y,null);
     }
@@ -104,6 +110,10 @@ public class Player extends GameObject{
 
     public boolean getPlaying(){
         return playing;
+    }
+
+    public int getPosition(){
+        return position;
     }
 
     public void setPlaying(boolean b){
