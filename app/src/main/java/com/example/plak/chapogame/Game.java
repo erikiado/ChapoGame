@@ -1,7 +1,14 @@
 package com.example.plak.chapogame;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.media.AudioAttributes;
+import android.media.SoundPool;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,20 +20,28 @@ import android.view.Window;
 import android.view.WindowManager;
 
 public class Game extends Activity {
+    private boolean continueMusic;
+    private SharedPreferences preferences;
+
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        context = this;
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         Window ventana = getWindow();
 
-        ventana.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        ventana.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         //Ponerle de vista en lugar de un xml una clase que despliega el juego
         setContentView(new GamePanel(this));
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -48,5 +63,27 @@ public class Game extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        boolean musicOption = preferences.getBoolean("switch_music", true);
+        if(musicOption) {
+            if (!continueMusic) {
+                MusicManager.pause();
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        boolean musicOption = preferences.getBoolean("switch_music", true);
+        if (musicOption) {
+            continueMusic = false;
+            MusicManager.start(this, MusicManager.MUSIC_MENU);
+        }
     }
 }

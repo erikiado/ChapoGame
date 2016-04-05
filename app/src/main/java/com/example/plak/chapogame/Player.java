@@ -12,6 +12,7 @@ public class Player extends GameObject{
     private double dy;
     private boolean playing;
     private boolean jump;
+    private boolean onGround;
     private Animation animation;
     private long startTime;
     private int position;
@@ -24,6 +25,8 @@ public class Player extends GameObject{
         position = 2;
         height = h;
         width = w;
+        onGround = true;
+        jump = false;
         animation = new Animation();
 
         Bitmap[] image = new Bitmap[numFrames];
@@ -39,8 +42,8 @@ public class Player extends GameObject{
 
     }
 
-    public void setJump(boolean b){
-        jump = b;
+    public void jump(){
+        jump = true;
     }
 
     public boolean getJump(){
@@ -49,29 +52,26 @@ public class Player extends GameObject{
 
 
     public boolean onGround(){
-        if(y == 450){
-            return true;
-        }
-        return false;
+        return onGround;
     }
     public void update(){
         long elapsed = (System.nanoTime() - startTime)/1000000;
 
-        if(elapsed > 100){
+        if(elapsed > 1000){
             score ++;
             startTime = System.nanoTime();
         }
 
         animation.update();
 
-
-        if(onGround()){
+        if(onGround){
             if(dy > 0){
-                dy*=-0.5;
+                dy*=-0.45;
             }
             if(jump){
-                dy = -25;
+                dy = -20;
                 jump=false;
+                onGround = false;
             }
         }else{
             dy += 1.1;
@@ -79,25 +79,36 @@ public class Player extends GameObject{
 
 
         if(y > 450){
-            dy = 0;
+            stand();
             y = 450;
         }
-//        if(up){
-//            dy -= 1;
-//        }else{
-//            dy += 1;
-//        }
-//
-//        if(dy>14) dy = 14;
-//        if(dy<-14) dy = -14;
-//
-        y += (int)(dy*2);
+
+        y += (int)(dy*1.1);
 
     }
 
     public void rollBack(){
         position --;
-        x-=50;
+        x-=150;
+    }
+
+    public void stand(){
+        dy = 0;
+        onGround = true;
+    }
+
+    public void fall(){
+        onGround = false;
+    }
+
+    public void stand(GameObject platform){
+        dy = 0;
+        y = platform.getY()-height;
+        onGround = true;
+    }
+
+    public void juntarDinero(){
+        score += 50;
     }
 
     public void draw(Canvas canvas){
