@@ -11,6 +11,7 @@ import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.Build;
 import android.test.suitebuilder.annotation.Smoke;
+import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -38,6 +39,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     private ArrayList<Platform> platforms;
     private ArrayList<Money> moneys;
     private ArrayList<Integer> moneysList;
+    private ArrayList<Pair> moneyPairs; //se crea el par de bloque y dinero, se esta guardando dos veces el bloque?
     private int moneyCount;
     private Random rand = new Random();
     private Paint hudPaint;
@@ -83,6 +85,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         platforms = new ArrayList<Platform>();
         moneys = new ArrayList<Money>();
         moneysList = new ArrayList<>();
+        moneyPairs = new ArrayList<>();
         moneyCount = 0;
 
         trailStartTime = System.nanoTime();
@@ -151,21 +154,24 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             long blockElapsed = (System.nanoTime() - blockStartTime)/1000000;
             if(blockElapsed > (2000 - player.getScore()/4)){
                 if(blocks.size()==0){
-                    blocks.add(new Block(BitmapFactory.decodeResource(getResources(),R.drawable.bloque),WIDTH+10,450,100,100,player.getScore(),1));
+                    Block b = new Block(BitmapFactory.decodeResource(getResources(),R.drawable.bloque),WIDTH+10,450,100,100,player.getScore(),1);
+                    blocks.add(b);
                     platforms.add(new Platform(BitmapFactory.decodeResource(getResources(),R.drawable.fondoverde),WIDTH+10,450,100,10,1));
-                    moneys.add(new Money(BitmapFactory.decodeResource(getResources(), R.drawable.fondoverde), WIDTH + 10, 370, 20, 20, 1));
-                    moneysList.add(moneyCount);
-                    moneyCount++;
+                    moneyPairs.add(new Pair(b,new Money(BitmapFactory.decodeResource(getResources(), R.drawable.fondoverde), WIDTH + 10, 370, 20, 20, 1)));
+                    //moneysList.add(moneyCount);
+                    //moneyCount++;
                 }else{
                     int neuY = ((int)(rand.nextDouble()*(HEIGHT-250)))+150;
                     if(neuY>600){
                         neuY -= 150;
                     }
-                    blocks.add(new Block(BitmapFactory.decodeResource(getResources(),R.drawable.bloque),WIDTH+10,neuY,100,100,player.getScore(),1));
+                    Block b = new Block(BitmapFactory.decodeResource(getResources(),R.drawable.bloque),WIDTH+10,neuY,100,100,player.getScore(),1);
+                    blocks.add(b);
                     platforms.add(new Platform(BitmapFactory.decodeResource(getResources(),R.drawable.fondoverde),WIDTH+10,neuY,100,10,1));
-                    moneys.add(new Money(BitmapFactory.decodeResource(getResources(),R.drawable.fondoverde),WIDTH+10,neuY-80,20,20,1));
-                    moneysList.add(moneyCount);
-                    moneyCount++;
+                    moneyPairs.add(new Pair(b,new Money(BitmapFactory.decodeResource(getResources(),R.drawable.fondoverde),WIDTH+10,neuY-80,20,20,1)));
+                   // moneys.add(new Money(BitmapFactory.decodeResource(getResources(),R.drawable.fondoverde),WIDTH+10,neuY-80,20,20,1));
+//                    moneysList.add(moneyCount);
+//                    moneyCount++;
                 }
                 blockStartTime = System.nanoTime();
             }
@@ -177,33 +183,35 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
                 platforms.get(i).update(block);
             }
 
-            int contBlock = 0;
-            for(int i = 0; i < moneysList.size();i++){
-                if(moneysList.get(i) >= 0){
-                    contBlock = moneysList.get(i);
-                    int dif = moneysList.size() - moneys.size();
-                    moneys.get(contBlock).update(blocks.get(contBlock+dif));
+            for(int i = 0; i < moneyPairs.size();i++){
+                Pair p = moneyPairs.get(i);
+                Money m = ((Money)p.second);
+                if(!m.isPicked()){
+                    m.update((Block)p.first);
                 }
             }
+//            for(int i = 0; i < moneysList.size();i++){
+//                if(moneysList.get(i) >= 0){
+//                    contBlock = moneysList.get(i);
+//                    int dif = moneysList.size() - moneys.size();
+//                    moneys.get(contBlock).update(blocks.get(contBlock+dif));
+//                }
+//            }
 
 
 
 
 
-            //Revisar colision por bloque
-            for(int i = 0; i < moneysList.size();i++){
-                if(moneysList.get(i) >= 0){
-                    if(colisionBloque(player, moneys.get(moneysList.get(i)))){
+
+            for(int i = 0; i < moneyPairs.size();i++) {
+                Pair p = moneyPairs.get(i);
+                Money m = ((Money) p.second);
+                if (!m.isPicked()) {
+                    if (colisionBloque(player, m)) {
                         player.juntarDinero();
-                        int k = moneysList.get(i);
-                        moneys.remove(k);
-                        moneysList.set(i,-1);
-                        moneyCount--;
-                        for(int j = i+1;j<moneysList.size();j++){
-                            moneysList.set(j,moneysList.get(j)-1);
-                        }
-                        break;
+                        m.pickUp();
                     }
+
                 }
             }
 
@@ -218,6 +226,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
                 }else if(colisionBloque(player,block)){
                     blocks.remove(i);
                     platforms.remove(i);
+                    moneyPairs.remove(i);
                     switch(player.getPosition()){
                         case 0:
                             break;
@@ -226,23 +235,14 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
                             player.rollBack();
                             break;
                     }
-                    moneysList.remove(0);
                     player.setPlaying(false);
                     break;
                 }
 
                 if(block.getX() < -110){
+                    moneyPairs.remove(i);
                     blocks.remove(i);
                     platforms.remove(i);
-                    if (moneysList.get(i) >= 0){
-                        moneys.remove(moneysList.get(i));
-                        moneysList.set(i,-1);
-                        moneyCount--;
-                        for(int j = i+1;j<moneysList.size();j++){
-                            moneysList.set(j,moneysList.get(j)-1);
-                        }
-                    }
-                    moneysList.remove(0);
                     break;
                 }
             }
@@ -285,8 +285,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             for(Platform platform: platforms){
                 platform.draw(canvas);
             }
-            for(Money money: moneys){
-                money.draw(canvas);
+            for(Pair p: moneyPairs){
+                Money m = (Money)p.second;
+                if(!m.isPicked()){
+                    m.draw(canvas);
+                }
             }
 
             //HUD

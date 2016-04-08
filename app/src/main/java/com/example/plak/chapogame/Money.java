@@ -12,13 +12,14 @@ public class Money extends GameObject {
     private Random rand = new Random();
     private Animation animation = new Animation();
     private Bitmap spritesheet;
+    private boolean picked;
 
     public Money(Bitmap res, int x, int y, int w, int h, int numFrames){
         super.x = x;
         super.y = y-5;
         width = w;
         height = h;
-
+        picked = false;
 
         Bitmap[] image = new Bitmap[numFrames];
         spritesheet = res;
@@ -42,6 +43,14 @@ public class Money extends GameObject {
         }catch (Exception e){
 
         }
+    }
+
+    public void pickUp(){
+        picked = true;
+    }
+
+    public boolean isPicked(){
+        return picked;
     }
 
 }
