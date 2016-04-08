@@ -3,6 +3,7 @@ package com.example.plak.chapogame;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
@@ -23,7 +24,7 @@ public class Game extends Activity {
     private boolean continueMusic;
     private SharedPreferences preferences;
 
-    private Context context;
+    private static Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,3 +88,4 @@ public class Game extends Activity {
         }
     }
 }
+

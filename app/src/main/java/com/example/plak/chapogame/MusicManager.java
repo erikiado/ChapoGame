@@ -67,7 +67,7 @@ public class MusicManager {
             } else if (music == MUSIC_GAME) {
                 mp = MediaPlayer.create(context, R.raw.pruebamenu);
             } else if (music == MUSIC_END_GAME) {
-                mp = MediaPlayer.create(context, R.raw.pruebamenu);
+                mp = MediaPlayer.create(context, R.raw.gameover);
             } else {
                 Log.e(TAG, "unsupported music number - " + music);
                 return;

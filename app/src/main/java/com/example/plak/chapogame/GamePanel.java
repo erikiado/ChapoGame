@@ -1,7 +1,9 @@
 package com.example.plak.chapogame;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -46,10 +48,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     private SoundPool sp;
     private int soundIds[];
     private Context context;
+    private int placesBlock [];
 
-    public GamePanel(Context context){
-        super(context);
-        this.context = context;
+    public GamePanel(Context cxt){
+        super(cxt);
+        context = cxt;
         //Interceptar eventos
         SurfaceHolder holder = getHolder();
         holder.addCallback(this);
@@ -57,6 +60,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         thread = new HiloPrincipal(holder,this);
         initializeSounds();
         setFocusable(true);
+        placesBlock = new int [3];
+        placesBlock [0] = 450;
+        placesBlock [1] = 320;
+        placesBlock [2] = 250;
+
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -66,7 +74,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         sp = sP.setMaxStreams(10).setAudioAttributes(attrs).build();
 
         soundIds = new int[10];
+        //jump sound
         soundIds[0] = sp.load(context,R.raw.jump,1);
+        //coin collision sound
+//        soundIds[1] = sp.load(context, R.raw.coin,1)
     }
 
     @Override
@@ -122,12 +133,15 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     @Override
     public boolean onTouchEvent(MotionEvent event){
 
-        if(event.getAction() == MotionEvent.ACTION_DOWN){
+        if(event.getAction() == MotionEvent.ACTION_DOWN) {
             if(!player.getPlaying()){
                 player.setPlaying(true);
-            }else{
-                //player.setUp(true);
             }
+//            else if (!player.onGround() && (event.getAction() == MotionEvent.ACTION_DOWN)){
+//                //player.setUp(true);
+//                player.jump();
+//                sp.play(soundIds[0], 1, 1, 1, 0, (float) 1.0);
+//            }
             return true;
         }
         if(event.getAction() == MotionEvent.ACTION_UP){
@@ -154,22 +168,28 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             long blockElapsed = (System.nanoTime() - blockStartTime)/1000000;
             if(blockElapsed > (2000 - player.getScore()/4)){
                 if(blocks.size()==0){
-                    Block b = new Block(BitmapFactory.decodeResource(getResources(),R.drawable.bloque),WIDTH+10,450,100,100,player.getScore(),1);
+                    Block b = new Block(BitmapFactory.decodeResource(getResources(),R.drawable.bloque),WIDTH+10,placesBlock[0],100,100,player.getScore(),1);
                     blocks.add(b);
                     platforms.add(new Platform(BitmapFactory.decodeResource(getResources(),R.drawable.fondoverde),WIDTH+10,450,100,10,1));
-                    moneyPairs.add(new Pair(b,new Money(BitmapFactory.decodeResource(getResources(), R.drawable.fondoverde), WIDTH + 10, 370, 20, 20, 1)));
+//                    moneyPairs.add(new Pair(b,new Money(BitmapFactory.decodeResource(getResources(), R.drawable.weed), WIDTH + 10, 370, 20, 20, 1)));
+                    moneyPairs.add(new Pair(b,new Money(BitmapFactory.decodeResource(getResources(), R.drawable.weed), WIDTH + 10, 370, 38, 45, 1)));
                     //moneysList.add(moneyCount);
                     //moneyCount++;
                 }else{
-                    int neuY = ((int)(rand.nextDouble()*(HEIGHT-250)))+150;
-                    if(neuY>600){
-                        neuY -= 150;
-                    }
-                    Block b = new Block(BitmapFactory.decodeResource(getResources(),R.drawable.bloque),WIDTH+10,neuY,100,100,player.getScore(),1);
+//                    int neuY = ((int)(rand.nextDouble()*(HEIGHT-250)))+150;
+//                    if(neuY>500){
+//                        neuY -= 150;
+//                    }
+                    // pos -> 0 = 450, 1 = 320, 2 = 250
+                    int x = rand.nextInt(3);
+                    // to know if weed should appear
+                    Block b = new Block(BitmapFactory.decodeResource(getResources(),R.drawable.bloque),WIDTH+10,placesBlock[x],100,100,player.getScore(),1);
                     blocks.add(b);
-                    platforms.add(new Platform(BitmapFactory.decodeResource(getResources(),R.drawable.fondoverde),WIDTH+10,neuY,100,10,1));
-                    moneyPairs.add(new Pair(b,new Money(BitmapFactory.decodeResource(getResources(),R.drawable.fondoverde),WIDTH+10,neuY-80,20,20,1)));
-                   // moneys.add(new Money(BitmapFactory.decodeResource(getResources(),R.drawable.fondoverde),WIDTH+10,neuY-80,20,20,1));
+                    platforms.add(new Platform(BitmapFactory.decodeResource(getResources(),R.drawable.fondoverde),WIDTH+10,placesBlock[x],100,10,1));
+//                    moneyPairs.add(new Pair(b,new Money(BitmapFactory.decodeResource(getResources(),R.drawable.weed),WIDTH+10,neuY-80,20,20,1)));
+                    moneyPairs.add(new Pair(b,new Money(BitmapFactory.decodeResource(getResources(),R.drawable.weed),WIDTH+10,placesBlock[x]-80,38,45,1)));
+
+                    // moneys.add(new Money(BitmapFactory.decodeResource(getResources(),R.drawable.fondoverde),WIDTH+10,neuY-80,20,20,1));
 //                    moneysList.add(moneyCount);
 //                    moneyCount++;
                 }
@@ -236,6 +256,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
                             break;
                     }
                     player.setPlaying(false);
+
                     break;
                 }
 
@@ -261,8 +282,21 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
                 }
             }
 
+            //hacer que el jugador ya puede ganar
+            if (player.getScore() > 150) {
+                player.setWin(true);
+                player.setPlaying(false);
+            }
+
+        }else if (player.getWin()) {
+//           player.setY(100);
+            Intent i = new Intent(context, ActivityGameOver.class);
+            ((Activity)context).startActivity(i);
+            ((Activity)context).finish();
+
         }
-    }
+
+    }//end main loop
 
 
     @Override

@@ -16,6 +16,7 @@ public class Player extends GameObject{
     private Animation animation;
     private long startTime;
     private int position;
+    private boolean win;
 
     public Player(Bitmap b, int w, int h, int numFrames){
         x = 400;
@@ -28,6 +29,7 @@ public class Player extends GameObject{
         onGround = true;
         jump = false;
         animation = new Animation();
+        win = false;
 
         Bitmap[] image = new Bitmap[numFrames];
         spritesheet = b;
@@ -138,4 +140,8 @@ public class Player extends GameObject{
     public void resetScore(){
         score = 0;
     }
+
+    public boolean getWin() { return win; }
+
+    public void setWin(boolean w) { win = w; }
 }
