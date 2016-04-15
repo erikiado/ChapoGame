@@ -1,4 +1,4 @@
-package com.example.plak.chapogame;
+package com.example.plak.chapogame.Activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,10 +6,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+
+import com.example.plak.chapogame.MusicManager;
+import com.example.plak.chapogame.R;
 
 public class ActivityGameOver extends AppCompatActivity {
 

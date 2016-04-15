@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ActivityMenu"
+            android:name=".Activities.ActivityMenu"
             android:label="@string/title_activity_activity_menu"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar">
@@ -25,11 +25,11 @@
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ActivitySettings"
+            android:name=".Activities.ActivitySettings"
             android:label="@string/title_activity_activity_settings"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".ActivityGameOver"
+            android:name=".Activities.ActivityGameOver"
             android:label="@string/title_activity_activity_game_over"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar"></activity>

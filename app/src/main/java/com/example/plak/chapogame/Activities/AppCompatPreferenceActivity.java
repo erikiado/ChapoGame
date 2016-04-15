@@ -1,4 +1,4 @@
-package com.example.plak.chapogame;
+package com.example.plak.chapogame.Activities;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

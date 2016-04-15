@@ -23,10 +23,7 @@ public class Block extends GameObject{
         height = h;
         choco = false;
 
-        speed = 7 + (int)(rand.nextDouble()*score/30);
-        if(speed > 40){
-            speed = 40;
-        }
+        speed = s;
 
         Bitmap[] image = new Bitmap[numFrames];
         spritesheet = res;
@@ -42,7 +39,7 @@ public class Block extends GameObject{
 
     public void update(){
         if(!choco){
-            x -= speed;
+            x += speed;
             animation.update();
         }else{
 

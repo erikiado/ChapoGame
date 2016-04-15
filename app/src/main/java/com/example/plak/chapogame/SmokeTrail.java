@@ -19,6 +19,7 @@ public class SmokeTrail extends GameObject {
 
     public void update(){
         x -=10;
+        r++;
     }
 
     public void draw(Canvas canvas){

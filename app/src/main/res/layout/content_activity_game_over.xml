@@ -12,7 +12,7 @@
     android:gravity="center"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.plak.chapogame.ActivityMenu"
+    tools:context=".Activities.ActivityMenu"
     tools:showIn="@layout/activity_menu">
 
     <TextView

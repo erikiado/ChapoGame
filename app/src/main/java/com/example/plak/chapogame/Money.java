@@ -12,14 +12,16 @@ public class Money extends GameObject {
     private Random rand = new Random();
     private Animation animation = new Animation();
     private Bitmap spritesheet;
+    private int speed;
     private boolean picked;
 
-    public Money(Bitmap res, int x, int y, int w, int h, int numFrames){
+    public Money(Bitmap res, int x, int y, int w, int h,int s, int numFrames){
         super.x = x;
         super.y = y-5;
         width = w;
         height = h;
         picked = false;
+        speed = s;
 
         Bitmap[] image = new Bitmap[numFrames];
         spritesheet = res;
@@ -33,8 +35,8 @@ public class Money extends GameObject {
         animation.setDelay(100);
     }
 
-    public void update(GameObject block){
-        x = block.getX();
+    public void update(){
+        x += speed;
     }
 
     public void draw(Canvas canvas){

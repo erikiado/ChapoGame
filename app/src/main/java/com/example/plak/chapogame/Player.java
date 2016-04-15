@@ -110,7 +110,7 @@ public class Player extends GameObject{
     }
 
     public void juntarDinero(){
-        score += 50;
+        score += 10;
     }
 
     public void draw(Canvas canvas){
