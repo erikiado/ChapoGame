@@ -68,15 +68,17 @@ public class Player extends GameObject{
 
         if(onGround){
             if(dy > 0){
-                dy*=-0.45;
+                //Este es el cambio de la caida, que tan rapido
+                dy*=-0.5;
             }
             if(jump){
-                dy = -20;
+                dy = -21;
                 jump=false;
                 onGround = false;
             }
         }else{
-            dy += 1.1;
+            //Entre mayor sea mas rapido cae, para impedir que llegue al otro bloque
+            dy += 1;
         }
 
 
@@ -91,6 +93,7 @@ public class Player extends GameObject{
 
     public void rollBack(){
         position --;
+        y = 450;
         x-=150;
     }
 
@@ -109,8 +112,21 @@ public class Player extends GameObject{
         onGround = true;
     }
 
+    public boolean onPlatform(){
+        if(onGround && y < 390){
+            return true;
+        }
+        return false;
+    }
+
     public void juntarDinero(){
         score += 10;
+    }
+
+    public void juntarTequila(){
+        score += 20;
+        position++;
+        x+=150;
     }
 
     public void draw(Canvas canvas){

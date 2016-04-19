@@ -11,9 +11,9 @@ public class Background {
     private Bitmap fondo;
     private int  x, y, dx;
 
-    public Background(Bitmap b){
+    public Background(Bitmap b,int speed){
         fondo = b;
-        dx = GamePanel.moveSpeed;
+        dx = speed;
     }
 
     public void update(){
@@ -21,6 +21,10 @@ public class Background {
         if(x < -GamePanel.WIDTH){
             x = 0;
         }
+    }
+
+    public void changeSpeed(int speed){
+        dx = speed;
     }
 
     public void draw(Canvas canvas){

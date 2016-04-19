@@ -19,9 +19,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:text="GameOver"
-        android:textSize="100sp"
-        android:gravity="center"/>
+        android:text="Game Over"
+        android:textSize="80sp"
+        android:textColor="#FFF"
+        android:shadowRadius="10"
+        android:layout_marginTop="30dp"
+        android:shadowColor="#000"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="50dp"/>
@@ -30,9 +33,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:id="@+id/musicSetting"
-        android:gravity="center"/>
-
+        android:textSize="50sp"
+        android:textColor="#FFF"
+        android:shadowRadius="10"
+        android:id="@+id/score"
+        android:shadowColor="#000"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="50dp"/>

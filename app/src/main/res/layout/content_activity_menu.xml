@@ -21,7 +21,9 @@
         android:textAlignment="center"
         android:text="Chapo"
         android:textSize="100sp"
-        android:gravity="center"/>
+        android:textColor="#FFF"
+        android:shadowRadius="8"
+        android:shadowColor="#000"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="50dp"/>

@@ -1,21 +1,24 @@
-package com.example.plak.chapogame;
+package com.example.plak.chapogame.Items;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
+import com.example.plak.chapogame.Animation;
+import com.example.plak.chapogame.GameObject;
+
 import java.util.Random;
 
 /**
- * Created by erikiado on 4/2/16.
+ * Created by erikiado on 4/19/16.
  */
-public class Money extends GameObject {
+public class Tequila extends GameObject {
     private Random rand = new Random();
     private Animation animation = new Animation();
     private Bitmap spritesheet;
     private int speed;
     private boolean picked;
 
-    public Money(Bitmap res, int x, int y, int w, int h,int s, int numFrames){
+    public Tequila(Bitmap res, int x, int y, int w, int h,int s, int numFrames){
         super.x = x;
         super.y = y-5;
         width = w;
