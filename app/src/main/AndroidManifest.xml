@@ -11,7 +11,7 @@
         <activity
             android:name=".Activities.ActivityMenu"
             android:label="@string/app_name"
-            android:screenOrientation="landscape"
+            android:screenOrientation="sensorLandscape"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,16 +22,21 @@
         <activity
             android:name=".Game"
             android:label="@string/app_name"
-            android:screenOrientation="landscape"
+            android:screenOrientation="sensorLandscape"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities.ActivitySettings"
             android:label="@string/title_activity_activity_settings"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="sensorLandscape" />
         <activity
             android:name=".Activities.ActivityGameOver"
             android:label="@string/title_activity_activity_game_over"
-            android:screenOrientation="landscape"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activities.ActivityScore"
+            android:label="@string/title_activity_activity_score"
+            android:screenOrientation="sensorLandscape"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

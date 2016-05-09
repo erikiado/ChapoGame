@@ -31,15 +31,17 @@ public class Game extends Activity {
         super.onCreate(savedInstanceState);
         context = this;
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
         Window ventana = getWindow();
 
         ventana.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         //Ponerle de vista en lugar de un xml una clase que despliega el juego
-        setContentView(new GamePanel(this));
+//        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        int level = getIntent().getIntExtra("cur_level", 1);
+        setContentView(new GamePanel(this, level));
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
     }
 
 

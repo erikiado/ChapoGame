@@ -16,6 +16,9 @@ import android.widget.TextView;
 import com.example.plak.chapogame.MusicManager;
 import com.example.plak.chapogame.R;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 public class ActivityGameOver extends AppCompatActivity {
 
     private Context context;
@@ -70,5 +73,13 @@ public class ActivityGameOver extends AppCompatActivity {
         }
     }
 
+    public void guardar() throws IOException {
+        String FILENAME = "hello_file";
+        String string = "hello world!";
+
+        FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
+        fos.write(string.getBytes());
+        fos.close();
+    }
 
 }

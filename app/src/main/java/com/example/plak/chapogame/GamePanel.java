@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -17,6 +18,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.example.plak.chapogame.Activities.ActivityGameOver;
+import com.example.plak.chapogame.Activities.ActivityScore;
 import com.example.plak.chapogame.Items.Money;
 import com.example.plak.chapogame.Items.Tequila;
 
@@ -31,7 +33,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
-    public int moveSpeed = -5;
+    public int moveSpeed;
     private long trailStartTime;
     private long blockStartTime;
 
@@ -51,14 +53,16 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     private int placesBlock [];
     private int totalBloques;
     private int neuBlockPosition, oldBlockPosition;
+    private SharedPreferences sharedPreferences;
+    private int level;
 
-    public GamePanel(Context cxt){
+    public GamePanel(Context cxt, int level){
         super(cxt);
         context = cxt;
         //Interceptar eventos
         SurfaceHolder holder = getHolder();
         holder.addCallback(this);
-
+        this.level = level;
         thread = new HiloPrincipal(holder,this);
         initializeSounds();
         setFocusable(true);
@@ -69,7 +73,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         SoundPool.Builder sP = new SoundPool.Builder();
         AudioAttributes attrs = new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_GAME).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
         sp = sP.setMaxStreams(10).setAudioAttributes(attrs).build();
-
         soundIds = new int[10];
         //jump sound
         soundIds[0] = sp.load(context,R.raw.jump,1);
@@ -84,7 +87,25 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         hudPaint.setTextSize(50);
 
         //Actors
-        fondo = new Background(BitmapFactory.decodeResource(getResources(),R.drawable.montana),moveSpeed);
+
+        switch(level){
+            case 1:
+                moveSpeed = -5;
+                fondo = new Background(BitmapFactory.decodeResource(getResources(),R.drawable.montana),moveSpeed);
+                break;
+            case 2:
+                moveSpeed = -5;
+                fondo = new Background(BitmapFactory.decodeResource(getResources(),R.drawable.fondoverde),moveSpeed);
+                break;
+            case 3:
+                moveSpeed = -5;
+                fondo = new Background(BitmapFactory.decodeResource(getResources(),R.drawable.fondocarcel),moveSpeed);
+                break;
+            default:
+                moveSpeed = -5;
+                fondo = new Background(BitmapFactory.decodeResource(getResources(),R.drawable.montana),moveSpeed);
+                break;
+        }
         player = new Player(BitmapFactory.decodeResource(getResources(),R.drawable.sprite_player),80,100,5);
         trails = new ArrayList<SmokeTrail>();
         blocks = new ArrayList<Block>();
@@ -167,7 +188,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             //Cada 1.8 segundos spawnear
             if (blockElapsed > 1800) {//(2000 - player.getScore()/4)){
                 if (blocks.size() == 0) {
-                    Block b = new Block(BitmapFactory.decodeResource(getResources(), R.drawable.bloque), WIDTH + 10, placesBlock[neuBlockPosition], 100, 100, moveSpeed, 1);
+                    Block b = new Block(BitmapFactory.decodeResource(getResources(), R.drawable.blocknara), WIDTH + 10, placesBlock[0], 100, 40, moveSpeed, 1);
                     blocks.add(b);
                     platforms.add(new Platform(BitmapFactory.decodeResource(getResources(), R.drawable.fondoverde), WIDTH + 10, 450, 100, 10, 1));
                     moneys.add(new Money(BitmapFactory.decodeResource(getResources(), R.drawable.weed), WIDTH + 40, 370, 38, 45, moveSpeed, 1));
@@ -185,7 +206,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
                     if (neuBlockPosition != 3) {
                         // to know if weed should appear
-                        Block b = new Block(BitmapFactory.decodeResource(getResources(), R.drawable.bloque), WIDTH + 10, placesBlock[neuBlockPosition], 100, 100, moveSpeed, 1);
+                        Block b = new Block(BitmapFactory.decodeResource(getResources(), R.drawable.blocknara), WIDTH + 10, placesBlock[neuBlockPosition], 100, 40, moveSpeed, 1);
                         blocks.add(b);
                         platforms.add(new Platform(BitmapFactory.decodeResource(getResources(), R.drawable.fondoverde), WIDTH + 10, placesBlock[neuBlockPosition], 100, 10, 1));
                         if (player.getPosition() == 2) {
@@ -243,7 +264,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
                 }
             }
 
-            for (int i = 0; i < blocks.size(); i++) {
+            for (int i = 0; i < blocks.size() && i < 3; i++) {
                 Block block = blocks.get(i);
                 Platform platform = platforms.get(i);
 
@@ -259,9 +280,17 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
                     switch (player.getPosition()) {
                         case 0:
                             player.setPlaying(false);
-                            Intent intent = new Intent(context, ActivityGameOver.class);
+                            Intent intent;
+                            if(player.getWin()){
+                                intent = new Intent(context, ActivityScore.class);
+                            }else{
+                                intent = new Intent(context, ActivityGameOver.class);
+                            }
+                            intent.putExtra("cur_level", level);
                             intent.putExtra("score", player.getScore());
-                            ((Activity) context).startActivity(intent);
+//                                ArrayList scores = new ArrayList();
+//                                scores.add(player.getScore());
+                            context.startActivity(intent);
                             ((Activity) context).finish();
                             break;
                         case 1:

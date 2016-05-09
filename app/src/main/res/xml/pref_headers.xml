@@ -5,7 +5,7 @@
         <header
             android:fragment="com.example.plak.chapogame.Activities.ActivitySettings$GeneralPreferenceFragment"
             android:icon="@drawable/ic_info_black_24dp"
-            android:title="@string/pref_header_general"
+            android:title="Sonido"
             />
 
 

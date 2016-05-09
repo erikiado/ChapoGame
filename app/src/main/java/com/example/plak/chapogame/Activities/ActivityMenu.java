@@ -69,10 +69,9 @@ public class ActivityMenu extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(context,Game.class);
+                i.putExtra("cur_level",1);
                 startActivity(i);
                 finish();
-                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                //      .setAction("Action", null).show();
             }
         });
 

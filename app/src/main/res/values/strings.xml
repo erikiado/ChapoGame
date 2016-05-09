@@ -63,4 +63,5 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_activity_game_over">ActivityGameOver</string>
+    <string name="title_activity_activity_score">ActivityScore</string>
 </resources>
