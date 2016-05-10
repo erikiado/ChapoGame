@@ -103,23 +103,23 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         switch(level){
             case 1:
                 moveSpeed = -5;
-                fondo = new Background(BitmapFactory.decodeResource(getResources(),R.drawable.montana),moveSpeed);
-                parallax = new FrontParallax(BitmapFactory.decodeResource(getResources(),R.drawable.fondoverde),moveSpeed-2);
+                fondo = new Background(BitmapFactory.decodeResource(getResources(),R.drawable.fondopdes),moveSpeed,1800);
+                parallax = new FrontParallax(BitmapFactory.decodeResource(getResources(),R.drawable.parallaxdes),moveSpeed-2,1800);
                 break;
             case 2:
                 moveSpeed = -8;
-                fondo = new Background(BitmapFactory.decodeResource(getResources(),R.drawable.fondoverde),moveSpeed);
-                parallax = new FrontParallax(BitmapFactory.decodeResource(getResources(),R.drawable.fondoverde),moveSpeed-2);
+                fondo = new Background(BitmapFactory.decodeResource(getResources(),R.drawable.fondotun),moveSpeed,1800);
+                parallax = new FrontParallax(BitmapFactory.decodeResource(getResources(),R.drawable.parallaxtun),moveSpeed-2,1800);
                 break;
             case 3:
                 moveSpeed = -10;
-                fondo = new Background(BitmapFactory.decodeResource(getResources(),R.drawable.fondocarcel),moveSpeed);
-                parallax = new FrontParallax(BitmapFactory.decodeResource(getResources(),R.drawable.fondoverde),moveSpeed-2);
+                fondo = new Background(BitmapFactory.decodeResource(getResources(),R.drawable.fondolun),moveSpeed,1800);
+                parallax = new FrontParallax(BitmapFactory.decodeResource(getResources(),R.drawable.parallaxlun),moveSpeed-2,1800);
                 break;
             default:
                 moveSpeed = -5;
-                fondo = new Background(BitmapFactory.decodeResource(getResources(),R.drawable.montana),moveSpeed);
-                parallax = new FrontParallax(BitmapFactory.decodeResource(getResources(),R.drawable.fondoverde),moveSpeed-2);
+                fondo = new Background(BitmapFactory.decodeResource(getResources(),R.drawable.fondopdes),moveSpeed,1800);
+                parallax = new FrontParallax(BitmapFactory.decodeResource(getResources(),R.drawable.parallaxdes),moveSpeed-2,1800);
                 break;
         }
         player = new Player(BitmapFactory.decodeResource(getResources(),R.drawable.sprite_player),80,100,5,level);
@@ -132,8 +132,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         policias = new ArrayList<Policia>();
         trailStartTime = System.nanoTime();
         blockStartTime = System.nanoTime();
-        pause = new Button(BitmapFactory.decodeResource(getResources(),R.drawable.bloque),50,50,80,80);
-        playButton = new Button(BitmapFactory.decodeResource(getResources(),R.drawable.bloque),600,250,80,80);
+        pause = new Button(BitmapFactory.decodeResource(getResources(),R.drawable.pausebutton),50,50,80,80);
+        playButton = new Button(BitmapFactory.decodeResource(getResources(),R.drawable.playbutton),580,270,180,180);
 
         pauseOn = false;
 
@@ -187,7 +187,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
         if(event.getAction() == MotionEvent.ACTION_DOWN) {
             if(pauseOn) {
-                if(posX > 600 && posX < 680 && posY > 250 && posY <330){
+                if(posX > 580 && posX < 760 && posY > 270 && posY <450){
                     player.setPlaying(true);
                     pauseOn = false;
                     //Resto de la pantalla
@@ -241,9 +241,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             //Cada 1.8 segundos spawnear
             if (blockElapsed > 1800) {//(2000 - player.getScore()/4)){
                 if (blocks.size() == 0) {
-                    Block b = new Block(BitmapFactory.decodeResource(getResources(), R.drawable.blocknara), WIDTH + 10, placesBlock[0], 100, 40, moveSpeed, 1);
+                    Block b = new Block(BitmapFactory.decodeResource(getResources(), R.drawable.bloquenara), WIDTH + 10, placesBlock[0], 100, 40, moveSpeed, 1);
                     blocks.add(b);
-                    platforms.add(new Platform(BitmapFactory.decodeResource(getResources(), R.drawable.fondoverde), WIDTH + 10, 450, 100, 10, 1));
+                    platforms.add(new Platform(BitmapFactory.decodeResource(getResources(), R.drawable.bloque), WIDTH + 10, 450, 100, 10, 1));
                     moneys.add(new Money(BitmapFactory.decodeResource(getResources(), R.drawable.weed), WIDTH + 40, 370, 38, 45, moveSpeed, 1));
                 } else {
                     //Reubicar siguiente bloque
@@ -261,9 +261,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
                     if (neuBlockPosition != 3) {
                         // to know if weed should appear
-                        Block b = new Block(BitmapFactory.decodeResource(getResources(), R.drawable.blocknara), WIDTH + 10, placesBlock[neuBlockPosition], 100, 40, moveSpeed, 1);
+                        Block b = new Block(BitmapFactory.decodeResource(getResources(), R.drawable.bloquenara), WIDTH + 10, placesBlock[neuBlockPosition], 100, 40, moveSpeed, 1);
                         blocks.add(b);
-                        platforms.add(new Platform(BitmapFactory.decodeResource(getResources(), R.drawable.fondoverde), WIDTH + 10, placesBlock[neuBlockPosition], 100, 10, 1));
+                        platforms.add(new Platform(BitmapFactory.decodeResource(getResources(), R.drawable.bloque), WIDTH + 10, placesBlock[neuBlockPosition], 100, 10, 1));
                         if (player.getPosition() == 2) {
                             if (currentBloques != 0 && currentBloques % papaAppear == 0) {
                                 currentBloques = 0;
@@ -545,7 +545,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             if(pauseOn){
                 playButton.draw(canvas);
             }else{
-                canvas.drawText(String.valueOf(player.getScore() * 12), 1000, 100, hudPaint);
+                canvas.drawText(String.valueOf(player.getScore()), 1000, 100, hudPaint);
                 pause.draw(canvas);
             }
             canvas.restoreToCount(savedState);

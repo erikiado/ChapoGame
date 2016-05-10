@@ -10,15 +10,16 @@ public class Background {
 
     private Bitmap fondo;
     private int  x, y, dx;
-
-    public Background(Bitmap b,int speed){
+    private int width;
+    public Background(Bitmap b,int speed, int w){
         fondo = b;
         dx = speed;
+        width = w;
     }
 
     public void update(){
         x+=dx;
-        if(x < -GamePanel.WIDTH){
+        if(x < -width){
             x = 0;
         }
     }
@@ -30,7 +31,7 @@ public class Background {
     public void draw(Canvas canvas){
         canvas.drawBitmap(fondo,x,y,null);
         if(x<0){
-            canvas.drawBitmap(fondo,x+GamePanel.WIDTH,y,null);
+            canvas.drawBitmap(fondo,x+width,y,null);
         }
     }
 

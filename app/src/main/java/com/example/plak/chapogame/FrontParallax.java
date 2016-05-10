@@ -9,16 +9,17 @@ import android.graphics.Canvas;
 public class FrontParallax {
     private Bitmap fondo;
     private int  x, y, dx;
-
-    public FrontParallax(Bitmap b,int speed){
+    private int width;
+    public FrontParallax(Bitmap b,int speed,int width){
         fondo = b;
         dx = speed;
-        y = 525;
+        y = 535;
+        this.width = width;
     }
 
     public void update(){
         x+=dx;
-        if(x < -GamePanel.WIDTH){
+        if(x < -width){
             x = 0;
         }
     }
@@ -30,7 +31,7 @@ public class FrontParallax {
     public void draw(Canvas canvas){
         canvas.drawBitmap(fondo,x,y,null);
         if(x<0){
-            canvas.drawBitmap(fondo,x+GamePanel.WIDTH,y,null);
+            canvas.drawBitmap(fondo,x+width,y,null);
         }
     }
 

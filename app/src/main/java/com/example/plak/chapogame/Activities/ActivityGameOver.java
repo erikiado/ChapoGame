@@ -61,7 +61,7 @@ public class ActivityGameOver extends AppCompatActivity {
 
         TextView t = (TextView) findViewById(R.id.score);
 
-        t.setText(String.valueOf(score*12));
+        t.setText(String.valueOf(score));
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
