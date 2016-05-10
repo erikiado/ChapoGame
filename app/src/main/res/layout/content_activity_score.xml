@@ -15,13 +15,18 @@
     android:layout_width="match_parent"
     android:orientation="vertical" android:layout_height="match_parent">
 
+
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:id="@+id/title_score"
         android:textAlignment="center"
-        android:textSize="30sp"/>
+        android:id="@+id/title_score"
+        android:layout_height="wrap_content"
+        android:text="Game Over"
+        android:textSize="80sp"
+        android:textColor="#FFF"
+        android:shadowRadius="10"
+        android:layout_marginTop="30dp"
+        android:shadowColor="#000"/>
 
     <View
         android:layout_width="match_parent"
@@ -29,11 +34,16 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:id="@+id/score"
         android:textAlignment="center"
-        android:textSize="40sp"/>
+        android:id="@+id/score"
+        android:layout_height="wrap_content"
+        android:textSize="50sp"
+        android:textColor="#FFF"
+        android:shadowRadius="10"
+        android:layout_marginTop="30dp"
+        android:shadowColor="#000"/>
+
+
 
 
 </LinearLayout>

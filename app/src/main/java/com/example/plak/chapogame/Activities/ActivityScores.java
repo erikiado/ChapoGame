@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.example.plak.chapogame.AdapterScores;
+import com.example.plak.chapogame.MusicManager;
 import com.example.plak.chapogame.R;
 
 import java.util.ArrayList;
@@ -22,6 +23,8 @@ public class ActivityScores extends AppCompatActivity {
     private Context context;
     private AdapterScores adapter;
     private SharedPreferences preferences;
+    private boolean continueMusic;
+
     private ArrayList names, scores;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,4 +63,27 @@ public class ActivityScores extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        boolean musicOption = preferences.getBoolean("switch_music", true);
+        if(musicOption) {
+            if (!continueMusic) {
+                MusicManager.pause();
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        boolean musicOption = preferences.getBoolean("switch_music", true);
+        if (musicOption) {
+            continueMusic = false;
+            MusicManager.start(this, MusicManager.MUSIC_MENU);
+        }
+    }
+
 }
