@@ -153,6 +153,13 @@ public class Player extends GameObject{
         papaTime = currTime;
     }
 
+    public void colisionPolicia () {
+        if (!papaPower) {
+            position = 0;
+            setPlaying(false);
+        }
+    }
+
     public void draw(Canvas canvas){
         canvas.drawBitmap(animation.getImage(),x,y,null);
     }
