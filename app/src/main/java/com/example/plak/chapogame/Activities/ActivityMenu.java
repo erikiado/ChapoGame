@@ -22,7 +22,7 @@ public class ActivityMenu extends AppCompatActivity {
     private Context context;
     private boolean continueMusic;
     private FloatingActionButton fab;
-    private Button buttonScores,buttonSettings;
+    private Button buttonScores,buttonSettings, buttonInstructions;
     private SharedPreferences preferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +39,7 @@ public class ActivityMenu extends AppCompatActivity {
         fab = (FloatingActionButton) findViewById(R.id.fab);
         buttonSettings = (Button) findViewById(R.id.buttonSettings);
         buttonScores = (Button) findViewById(R.id.buttonScores);
+        buttonInstructions = (Button) findViewById(R.id.buttonInstrucciones);
         initializeListeners();
     }
 
@@ -87,6 +88,14 @@ public class ActivityMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(context,ActivityScores.class);
+                startActivity(i);
+            }
+        });
+
+        buttonInstructions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(context,ActivityInstructions.class);
                 startActivity(i);
             }
         });

@@ -77,7 +77,7 @@ public class ActivityGameOver extends AppCompatActivity {
                 names.add(maxI,name.getText().toString());
 
                 SharedPreferences.Editor editor = preferences.edit();
-                editor.clear();
+//                editor.clear();
                 for(int i = 0; i < 5; i++){
                     editor.putString("name_"+(i+1),String.valueOf(names.get(i)));
                     editor.putInt("score_"+(i+1),(int)scores.get(i));
