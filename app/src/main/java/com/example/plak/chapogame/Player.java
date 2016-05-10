@@ -19,8 +19,9 @@ public class Player extends GameObject{
     private boolean win;
     private boolean papaPower;
     private long papaTime;
+    private int level;
 
-    public Player(Bitmap b, int w, int h, int numFrames){
+    public Player(Bitmap b, int w, int h, int numFrames, int level){
         x = 400;
         y = 450;
         dy = 0;
@@ -33,7 +34,7 @@ public class Player extends GameObject{
         animation = new Animation();
         win = false;
         papaPower = false;
-
+        this.level = level;
         Bitmap[] image = new Bitmap[numFrames];
         spritesheet = b;
 
@@ -63,7 +64,36 @@ public class Player extends GameObject{
         long elapsed = (System.nanoTime() - startTime)/1000000;
 
         if(elapsed > 1000){
-            score ++;
+            switch (level){
+                case 1:
+                    if(papaPower){
+                        score += 2;
+                    }else{
+                        score ++;
+                    }
+                    break;
+                case 2:
+                    if(papaPower){
+                        score += 60;
+                    }else{
+                        score += 20;
+                    }
+                    break;
+                case 3:
+                    if(papaPower){
+                        score += 1200;
+                    }else{
+                        score += 300;
+                    }
+                    break;
+                default:
+                    if(papaPower){
+                        score += 2;
+                    }else{
+                        score ++;
+                    }
+                    break;
+            }
             startTime = System.nanoTime();
         }
 
@@ -108,6 +138,20 @@ public class Player extends GameObject{
             position--;
             y = 450;
             x -= 150;
+            switch (level){
+                case 1:
+                    score -= 10;
+                    break;
+                case 2:
+                    score -= 200;
+                    break;
+                case 3:
+                    score -= 1500;
+                    break;
+                default:
+                    score-=10;
+                    break;
+            }
         }
     }
 
@@ -134,15 +178,70 @@ public class Player extends GameObject{
     }
 
     public void juntarDinero(){
-        if (papaPower) {
-            score += 100;
-        }else {
-            score += 10;
+        switch (level){
+            case 1:
+                if(papaPower){
+                    score += 10;
+                }else{
+                    score += 5;
+                }
+                break;
+            case 2:
+                if(papaPower){
+                    score += 300;
+                }else{
+                    score += 100;
+                }
+                break;
+            case 3:
+                if(papaPower){
+                    score += 4000;
+                }else{
+                    score += 1000;
+                }
+                break;
+            default:
+                if(papaPower){
+                    score += 2;
+                }else{
+                    score += 5;
+                }
+                break;
         }
     }
 
     public void juntarTequila(){
-        score += 20;
+        switch (level){
+            case 1:
+                if(papaPower){
+                    score += 20;
+                }else{
+                    score += 10;
+                }
+                break;
+            case 2:
+                if(papaPower){
+                    score += 600;
+                }else{
+                    score += 200;
+                }
+                break;
+            case 3:
+                if(papaPower){
+                    score += 6000;
+                }else{
+                    score += 1500;
+                }
+                break;
+            default:
+                if(papaPower){
+                    score += 20;
+                }else{
+                    score += 10;
+                }
+                break;
+        }
+
         position++;
         x+=150;
     }

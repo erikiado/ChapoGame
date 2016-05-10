@@ -50,6 +50,10 @@ public class Tequila extends GameObject {
         }
     }
 
+    public void changeSpeed(int speed){
+        this.speed = speed;
+    }
+
     public void pickUp(){
         picked = true;
     }

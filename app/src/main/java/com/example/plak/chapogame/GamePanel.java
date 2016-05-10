@@ -122,7 +122,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
                 parallax = new FrontParallax(BitmapFactory.decodeResource(getResources(),R.drawable.fondoverde),moveSpeed-2);
                 break;
         }
-        player = new Player(BitmapFactory.decodeResource(getResources(),R.drawable.sprite_player),80,100,5);
+        player = new Player(BitmapFactory.decodeResource(getResources(),R.drawable.sprite_player),80,100,5,level);
         trails = new ArrayList<SmokeTrail>();
         blocks = new ArrayList<Block>();
         platforms = new ArrayList<Platform>();
@@ -246,6 +246,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
                     platforms.add(new Platform(BitmapFactory.decodeResource(getResources(), R.drawable.fondoverde), WIDTH + 10, 450, 100, 10, 1));
                     moneys.add(new Money(BitmapFactory.decodeResource(getResources(), R.drawable.weed), WIDTH + 40, 370, 38, 45, moveSpeed, 1));
                 } else {
+                    //Reubicar siguiente bloque
                     if (neuBlockPosition == 3) {
                         neuBlockPosition = 0;
                     } else if (neuBlockPosition == 0) {
@@ -276,8 +277,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
                                 } else {
                                     policias.add(new Policia(BitmapFactory.decodeResource(getResources(), R.drawable.rsz_polici), WIDTH + 40,470, 38, 45, moveSpeed, 1));
                                 }
-                            }
-                            else {
+                            } else {
                                 moneys.add(new Money(BitmapFactory.decodeResource(getResources(), R.drawable.weed), WIDTH + 40, placesBlock[neuBlockPosition] - 80, 38, 45, moveSpeed, 1));
                             }
                         }else {
@@ -453,31 +453,37 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
             if(totalBloques%15 == 14 && totalBloques > numBloqueCambio){
                 moveSpeed --;
+                resetMoveSpeed();
+                fondo.changeSpeed(moveSpeed);
+                parallax.changeSpeed(moveSpeed-2);
                 numBloqueCambio = totalBloques;
             }
 
-            //hacer que el jugador ya puede ganar
-//            if(player.getScore()>250){
-//                moveSpeed = -10;
-//            }else if(player.getScore() > 200){
-//                moveSpeed = -9;
-//            }else if(player.getScore() > 150){
-//                moveSpeed = -8;
-//            }else if(player.getScore() > 100){
-//                moveSpeed = -7;
-//            }else if(player.getScore() > 50){
-//                moveSpeed = -6;
-//            }else{
-//                moveSpeed = -5;
-//            }
 
-            fondo.changeSpeed(moveSpeed);
-            parallax.changeSpeed(moveSpeed-2);
-
-
-            if (player.getScore() > 200) {
-                player.setWin(true);
+            switch (level){
+                case 1:
+                    if (player.getScore() > 200) {
+                        player.setWin(true);
+                    }
+                    break;
+                case 2:
+                    if (player.getScore() > 3000) {
+                        player.setWin(true);
+                    }
+                    break;
+                case 3:
+                    if (player.getScore() > 50000) {
+                        player.setWin(true);
+                    }
+                    break;
+                default:
+                    if (player.getScore() > 150) {
+                        player.setWin(true);
+                    }
+                    break;
             }
+
+
 
         }
 
@@ -539,7 +545,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             if(pauseOn){
                 playButton.draw(canvas);
             }else{
-                canvas.drawText(String.valueOf(player.getScore()*12),1000,100,hudPaint);
+                canvas.drawText(String.valueOf(player.getScore() * 12), 1000, 100, hudPaint);
                 pause.draw(canvas);
             }
             canvas.restoreToCount(savedState);
@@ -564,6 +570,27 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         return false;
     }
 
+    public void resetMoveSpeed(){
+        for(Block block: blocks) {
+            block.changeSpeed(moveSpeed);
+        }
+
+        for(Money money: moneys){
+            money.changeSpeed(moveSpeed);
+        }
+
+        for(Tequila tequila: tequilas){
+            tequila.changeSpeed(moveSpeed);
+        }
+
+        for (Papa papa: papas) {
+            papa.changeSpeed(moveSpeed);
+        }
+
+        for (Policia policia: policias) {
+            policia.changeSpeed(moveSpeed);
+        }
+    }
 
     public boolean paso(GameObject player, GameObject platform){
         if(player.getX()>= platform.getX()+platform.getWidth()-1){

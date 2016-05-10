@@ -46,6 +46,10 @@ public class Block extends GameObject{
         }
     }
 
+    public void changeSpeed(int speed){
+        this.speed = speed;
+    }
+
     public void draw(Canvas canvas){
         try{
            canvas.drawBitmap(animation.getImage(),x,y,null);
