@@ -54,6 +54,10 @@ public class Money extends GameObject {
         picked = true;
     }
 
+    public void changeSpeed(int speed){
+        this.speed = speed;
+    }
+
     public boolean isPicked(){
         return picked;
     }

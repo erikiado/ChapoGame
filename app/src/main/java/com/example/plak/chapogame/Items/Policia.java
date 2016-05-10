@@ -56,4 +56,7 @@ public class Policia extends GameObject{
     public boolean isPicked(){
         return picked;
     }
+    public void changeSpeed(int speed){
+        this.speed = speed;
+    }
 }

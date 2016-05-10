@@ -57,4 +57,7 @@ public class Papa extends GameObject {
         return picked;
     }
 
+    public void changeSpeed(int speed){
+        this.speed = speed;
+    }
 }
