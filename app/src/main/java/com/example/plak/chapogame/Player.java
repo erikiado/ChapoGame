@@ -17,6 +17,8 @@ public class Player extends GameObject{
     private long startTime;
     private int position;
     private boolean win;
+    private boolean papaPower;
+    private long papaTime;
 
     public Player(Bitmap b, int w, int h, int numFrames){
         x = 400;
@@ -30,6 +32,7 @@ public class Player extends GameObject{
         jump = false;
         animation = new Animation();
         win = false;
+        papaPower = false;
 
         Bitmap[] image = new Bitmap[numFrames];
         spritesheet = b;
@@ -89,12 +92,23 @@ public class Player extends GameObject{
 
         y += (int)(dy*1.1);
 
+        if (papaPower) {
+            long elapsedPapa = (System.nanoTime() - papaTime)/1000000;
+            if (elapsedPapa < 6000) {
+                papaPower = true;
+            }else {
+                papaPower = false;
+            }
+        }
+
     }
 
     public void rollBack(){
-        position --;
-        y = 450;
-        x-=150;
+        if (!papaPower) {
+            position--;
+            y = 450;
+            x -= 150;
+        }
     }
 
     public void stand(){
@@ -120,13 +134,23 @@ public class Player extends GameObject{
     }
 
     public void juntarDinero(){
-        score += 10;
+        if (papaPower) {
+            score += 100;
+        }else {
+            score += 10;
+        }
     }
 
     public void juntarTequila(){
         score += 20;
         position++;
         x+=150;
+    }
+
+    public void papaPowerUp(long currTime) {
+        //que va a hacer este culero cuando lo agarre?
+        papaPower = true;
+        papaTime = currTime;
     }
 
     public void draw(Canvas canvas){
@@ -160,4 +184,6 @@ public class Player extends GameObject{
     public boolean getWin() { return win; }
 
     public void setWin(boolean w) { win = w; }
+
+    public boolean isPowerUp() {return papaPower; }
 }
