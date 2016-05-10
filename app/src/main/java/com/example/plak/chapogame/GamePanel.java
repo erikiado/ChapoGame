@@ -12,13 +12,14 @@ import android.graphics.Paint;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.Build;
-import android.util.Pair;
+import android.preference.PreferenceManager;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.example.plak.chapogame.Activities.ActivityGameOver;
 import com.example.plak.chapogame.Activities.ActivityScore;
+import com.example.plak.chapogame.Buttons.Button;
 import com.example.plak.chapogame.Items.Money;
 import com.example.plak.chapogame.Items.Tequila;
 
@@ -51,10 +52,14 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     private int soundIds[];
     private Context context;
     private int placesBlock [];
-    private int totalBloques;
+    private int totalBloques, numBloqueCambio;
     private int neuBlockPosition, oldBlockPosition;
     private SharedPreferences sharedPreferences;
     private int level;
+    private boolean soundOn;
+    private FrontParallax parallax;
+    private Button pause,playButton;
+    private boolean pauseOn;
 
     public GamePanel(Context cxt, int level){
         super(cxt);
@@ -64,6 +69,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         holder.addCallback(this);
         this.level = level;
         thread = new HiloPrincipal(holder,this);
+        sharedPreferences =  PreferenceManager.getDefaultSharedPreferences(context);
+        soundOn = sharedPreferences.getBoolean("switch_sound", true);
         initializeSounds();
         setFocusable(true);
     }
@@ -92,18 +99,22 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             case 1:
                 moveSpeed = -5;
                 fondo = new Background(BitmapFactory.decodeResource(getResources(),R.drawable.montana),moveSpeed);
+                parallax = new FrontParallax(BitmapFactory.decodeResource(getResources(),R.drawable.fondoverde),moveSpeed-2);
                 break;
             case 2:
-                moveSpeed = -5;
+                moveSpeed = -8;
                 fondo = new Background(BitmapFactory.decodeResource(getResources(),R.drawable.fondoverde),moveSpeed);
+                parallax = new FrontParallax(BitmapFactory.decodeResource(getResources(),R.drawable.fondoverde),moveSpeed-2);
                 break;
             case 3:
-                moveSpeed = -5;
+                moveSpeed = -10;
                 fondo = new Background(BitmapFactory.decodeResource(getResources(),R.drawable.fondocarcel),moveSpeed);
+                parallax = new FrontParallax(BitmapFactory.decodeResource(getResources(),R.drawable.fondoverde),moveSpeed-2);
                 break;
             default:
                 moveSpeed = -5;
                 fondo = new Background(BitmapFactory.decodeResource(getResources(),R.drawable.montana),moveSpeed);
+                parallax = new FrontParallax(BitmapFactory.decodeResource(getResources(),R.drawable.fondoverde),moveSpeed-2);
                 break;
         }
         player = new Player(BitmapFactory.decodeResource(getResources(),R.drawable.sprite_player),80,100,5);
@@ -114,6 +125,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         tequilas = new ArrayList<Tequila>();
         trailStartTime = System.nanoTime();
         blockStartTime = System.nanoTime();
+        pause = new Button(BitmapFactory.decodeResource(getResources(),R.drawable.bloque),50,50,80,80);
+        playButton = new Button(BitmapFactory.decodeResource(getResources(),R.drawable.bloque),600,250,80,80);
+
+        pauseOn = false;
 
         placesBlock = new int [3];
         placesBlock [0] = 450;
@@ -121,11 +136,13 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         placesBlock [2] = 250;
 
         totalBloques = 0;
+        numBloqueCambio = 0;
         neuBlockPosition = 0;
         oldBlockPosition = 0;
 
         thread.setRunning(true);
         thread.start();
+
 
     }
 
@@ -155,14 +172,39 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     @Override
     public boolean onTouchEvent(MotionEvent event){
 
+        float posX = event.getX();
+        float posY = event.getY();
+
         if(event.getAction() == MotionEvent.ACTION_DOWN) {
-            if(!player.getPlaying()){
+            if(pauseOn) {
+                if(posX > 600 && posX < 680 && posY > 250 && posY <330){
+                    player.setPlaying(true);
+                    pauseOn = false;
+                    //Resto de la pantalla
+                }
+
+            //Si el jugador NO esta jugando, jugar
+            }else if(!player.getPlaying()){
                 player.setPlaying(true);
+            //Mientras se juega
+            }else{
+                //Click Boton Pausa
+                if(posX > 50 && posX < 130 && posY > 50 && posY <130){
+                    player.setPlaying(false);
+                    pauseOn = true;
+                //Resto de la pantalla
+                }else{
+                    //Si estoy en tocando, brinco
+                    if(player.onGround()){
+                        player.jump();
+                        if(soundOn){
+                            sp.play(soundIds[0], 1, 1, 1, 0, (float) 1.0);
+                        }
+                    }
+                }
+
             }
-            if(player.onGround()){
-                player.jump();
-                sp.play(soundIds[0], 1, 1, 1, 0, (float) 1.0);
-            }
+
             return true;
         }
 
@@ -180,6 +222,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         if (player.getPlaying()) {
             //Actualizar/Mover fondo y jugador: Editar esto si quieres que se mueva distinto
             fondo.update();
+            parallax.update();
             player.update();
 
 
@@ -213,7 +256,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
                             moneys.add(new Money(BitmapFactory.decodeResource(getResources(), R.drawable.weed), WIDTH + 40, placesBlock[neuBlockPosition] - 80, 38, 45, moveSpeed, 1));
                         } else {
                             if (totalBloques % 20 == 0) {
-                                tequilas.add(new Tequila(BitmapFactory.decodeResource(getResources(), R.drawable.fondoverde), WIDTH + 40, placesBlock[neuBlockPosition] - 80, 38, 45, moveSpeed, 1));
+                                tequilas.add(new Tequila(BitmapFactory.decodeResource(getResources(), R.drawable.rsz_1tequikate), WIDTH + 40, placesBlock[neuBlockPosition] - 80, 35, 80, moveSpeed, 1));
                             } else {
                                 moneys.add(new Money(BitmapFactory.decodeResource(getResources(), R.drawable.weed), WIDTH + 40, placesBlock[neuBlockPosition] - 80, 38, 45, moveSpeed, 1));
                             }
@@ -308,6 +351,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             checarBorde();
 
 
+
             long elapsed = (System.nanoTime() - trailStartTime) / 1000000;
             if (elapsed > 120) {
                 trails.add(new SmokeTrail(player.getX(), player.getY() + 100));
@@ -321,22 +365,30 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
                 }
             }
 
-            //hacer que el jugador ya puede ganar
-            if(player.getScore()>250){
-                moveSpeed = -10;
-            }else if(player.getScore() > 200){
-                moveSpeed = -9;
-            }else if(player.getScore() > 150){
-                moveSpeed = -8;
-            }else if(player.getScore() > 100){
-                moveSpeed = -7;
-            }else if(player.getScore() > 50){
-                moveSpeed = -6;
-            }else{
-                moveSpeed = -5;
+
+
+            if(totalBloques%15 == 14 && totalBloques > numBloqueCambio){
+                moveSpeed --;
+                numBloqueCambio = totalBloques;
             }
 
+            //hacer que el jugador ya puede ganar
+//            if(player.getScore()>250){
+//                moveSpeed = -10;
+//            }else if(player.getScore() > 200){
+//                moveSpeed = -9;
+//            }else if(player.getScore() > 150){
+//                moveSpeed = -8;
+//            }else if(player.getScore() > 100){
+//                moveSpeed = -7;
+//            }else if(player.getScore() > 50){
+//                moveSpeed = -6;
+//            }else{
+//                moveSpeed = -5;
+//            }
+
             fondo.changeSpeed(moveSpeed);
+            parallax.changeSpeed(moveSpeed-2);
 
 
             if (player.getScore() > 200) {
@@ -344,6 +396,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             }
 
         }
+
 
     }//end main loop
 
@@ -358,7 +411,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             final int savedState = canvas.save();
             canvas.scale(scaleX, scaleY);
             fondo.draw(canvas);
+
             player.draw(canvas);
+            parallax.draw(canvas);
             for(SmokeTrail trail: trails){
                 trail.draw(canvas);
             }
@@ -385,8 +440,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             }
 
             //HUD
-            canvas.drawText(String.valueOf(player.getScore()*12),1000,100,hudPaint);
-
+            if(pauseOn){
+                playButton.draw(canvas);
+            }else{
+                canvas.drawText(String.valueOf(player.getScore()*12),1000,100,hudPaint);
+                pause.draw(canvas);
+            }
             canvas.restoreToCount(savedState);
         }
     }

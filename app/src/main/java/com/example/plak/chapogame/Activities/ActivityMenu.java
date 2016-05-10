@@ -22,7 +22,7 @@ public class ActivityMenu extends AppCompatActivity {
     private Context context;
     private boolean continueMusic;
     private FloatingActionButton fab;
-    private Button buttonSettings;
+    private Button buttonScores,buttonSettings;
     private SharedPreferences preferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +36,9 @@ public class ActivityMenu extends AppCompatActivity {
         context = this;
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        TextView text = (TextView) findViewById(R.id.musicSetting);
-
         fab = (FloatingActionButton) findViewById(R.id.fab);
         buttonSettings = (Button) findViewById(R.id.buttonSettings);
+        buttonScores = (Button) findViewById(R.id.buttonScores);
         initializeListeners();
     }
 
@@ -69,6 +68,7 @@ public class ActivityMenu extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(context,Game.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 i.putExtra("cur_level",1);
                 startActivity(i);
                 finish();
@@ -79,6 +79,14 @@ public class ActivityMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(context,ActivitySettings.class);
+                startActivity(i);
+            }
+        });
+
+        buttonScores.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(context,ActivityScores.class);
                 startActivity(i);
             }
         });
