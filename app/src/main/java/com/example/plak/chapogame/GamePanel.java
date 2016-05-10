@@ -244,7 +244,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
                     Block b = new Block(BitmapFactory.decodeResource(getResources(), R.drawable.bloquenara), WIDTH + 10, placesBlock[0], 100, 40, moveSpeed, 1);
                     blocks.add(b);
                     platforms.add(new Platform(BitmapFactory.decodeResource(getResources(), R.drawable.bloque), WIDTH + 10, 450, 100, 10, 1));
-                    moneys.add(new Money(BitmapFactory.decodeResource(getResources(), R.drawable.weed), WIDTH + 40, 370, 38, 45, moveSpeed, 1));
+                    moneys.add(new Money(BitmapFactory.decodeResource(getResources(), R.drawable.pkweed), WIDTH + 40, 370, 45 , 40, moveSpeed, 1));
                 } else {
                     //Reubicar siguiente bloque
                     if (neuBlockPosition == 3) {
@@ -278,7 +278,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
                                     policias.add(new Policia(BitmapFactory.decodeResource(getResources(), R.drawable.rsz_polici), WIDTH + 40,470, 38, 45, moveSpeed, 1));
                                 }
                             } else {
-                                moneys.add(new Money(BitmapFactory.decodeResource(getResources(), R.drawable.weed), WIDTH + 40, placesBlock[neuBlockPosition] - 80, 38, 45, moveSpeed, 1));
+                                moneys.add(new Money(BitmapFactory.decodeResource(getResources(), R.drawable.pkweed), WIDTH + 40, placesBlock[neuBlockPosition] - 80, 45, 40, moveSpeed, 1));
                             }
                         }else {
                             if (totalBloques % 20 == 0) {
@@ -296,7 +296,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
                                     policias.add(new Policia(BitmapFactory.decodeResource(getResources(), R.drawable.rsz_polici), WIDTH + 40, 470, 38, 45, moveSpeed, 1));
                                 }
                             } else {
-                                moneys.add(new Money(BitmapFactory.decodeResource(getResources(), R.drawable.weed), WIDTH + 40, placesBlock[neuBlockPosition] - 80, 38, 45, moveSpeed, 1));
+                                moneys.add(new Money(BitmapFactory.decodeResource(getResources(), R.drawable.pkweed), WIDTH + 40, placesBlock[neuBlockPosition] - 80, 45, 40, moveSpeed, 1));
                             }
                         }
                     }
