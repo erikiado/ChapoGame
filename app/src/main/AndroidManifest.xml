@@ -38,6 +38,7 @@
             android:label="@string/title_activity_activity_score"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".Activities.ActivityScores"
             android:label="Highscores"
             android:screenOrientation="sensorLandscape"

@@ -27,12 +27,13 @@ private int layoutResourceId;
 private RecyclerView recyclerView;
 private LinearLayoutManager linearLayoutManager;
 private View view;
-    private ArrayList data;
+    private ArrayList dataNames, dataScores;
 
-public AdapterScores(Context context, int layoutResourceId, ArrayList data) {
+public AdapterScores(Context context, int layoutResourceId, ArrayList names, ArrayList scores) {
         this.context = context;
         this.layoutResourceId = layoutResourceId;
-        this.data = data;
+    this.dataNames = names;
+    this.dataScores = scores;
           }
 
 
@@ -44,29 +45,29 @@ public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 
 @Override
 public void onBindViewHolder(AdapterScores.ViewHolder holder, int position) {
-final String objeto = (String)data.get(position);
-    holder.scoreText.setText(objeto);
-        //holder.nombreSubCategoria.setText(objeto.getString("Nombre"));
-        //holder.personName.setText(objeto.getString("name"));
+    final String name = (String)dataNames.get(position);
+    final int score = (int)dataScores.get(position);
 
-        //holder.durationTime.setText(getFechas(objeto));
-
-        //holder.background.
+    holder.scoreName.setText(name);
+    holder.scoreScore.setText(String.valueOf(score));
+    holder.scorePlace.setText(String.valueOf(position+1));
 
         }
 
 @Override
 public int getItemCount() {
-        return data.size();
+        return dataNames.size();
         }
 
 public static class ViewHolder extends RecyclerView.ViewHolder {
-    TextView place, scoreText;
+    TextView place, scoreName, scoreScore, scorePlace;
     LinearLayout background;
 
     public ViewHolder(View itemView) {
         super(itemView);
-        scoreText = (TextView) itemView.findViewById(R.id.score_score);
+        scoreScore = (TextView) itemView.findViewById(R.id.score_score);
+        scoreName = (TextView) itemView.findViewById(R.id.score_name);
+        scorePlace = (TextView) itemView.findViewById(R.id.score_place);
         //personName = (TextView)itemView.findViewById(R.id.coupons_name);
         //durationTime = (TextView)itemView.findViewById(R.id.coupons_duration);
         //background = (LinearLayout) itemView.findViewById(R.id.background_layout);
@@ -74,13 +75,13 @@ public static class ViewHolder extends RecyclerView.ViewHolder {
 }
 
     public void add(Object item, int position) {
-        data.add(position, item);
+        dataNames.add(position, item);
         notifyItemInserted(position);
     }
 
     public void remove(Object item) {
-        int position = data.indexOf(item);
-        data.remove(position);
+        int position = dataNames.indexOf(item);
+        dataNames.remove(position);
         notifyItemRemoved(position);
     }
 

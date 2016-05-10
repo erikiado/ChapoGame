@@ -1,6 +1,8 @@
 package com.example.plak.chapogame.Activities;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -19,25 +21,40 @@ public class ActivityScores extends AppCompatActivity {
     private LinearLayoutManager linearLayoutManager;
     private Context context;
     private AdapterScores adapter;
-
+    private SharedPreferences preferences;
+    private ArrayList names, scores;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scores);
         context = this;
         recyclerView = (RecyclerView)findViewById(R.id.scroll);
-        data = new ArrayList<>();
-        data.add("s");
-        data.add("4");
-        data.add("5");
-        inicializarLista(data);
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        names = new ArrayList();
+        scores = new ArrayList();
+
+        scores.add(preferences.getInt("score_1", 0));
+        scores.add(preferences.getInt("score_2", 0));
+        scores.add(preferences.getInt("score_3", 0));
+        scores.add(preferences.getInt("score_4", 0));
+        scores.add(preferences.getInt("score_5", 0));
+
+        names.add(preferences.getString("name_1", "--- ---"));
+        names.add(preferences.getString("name_2", "--- ---"));
+        names.add(preferences.getString("name_3", "--- ---"));
+        names.add(preferences.getString("name_4", "--- ---"));
+        names.add(preferences.getString("name_5", "--- ---"));
+
+
+        inicializarLista(names, scores);
     }
 
-    public void inicializarLista(ArrayList dataForAdapter){
+    public void inicializarLista(ArrayList names,ArrayList scores){
         linearLayoutManager = new LinearLayoutManager(context);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         linearLayoutManager.scrollToPosition(0);
-        adapter = new AdapterScores(context, R.layout.item_score, dataForAdapter);
+        adapter = new AdapterScores(context, R.layout.item_score, names,scores);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(linearLayoutManager);

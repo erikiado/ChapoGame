@@ -35,7 +35,7 @@ public class ActivityScore extends AppCompatActivity {
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         ((TextView)findViewById(R.id.score)).setText(String.valueOf(score));
-        ((TextView)findViewById(R.id.title_score)).setText("Resultados "+level+": ");
+        ((TextView)findViewById(R.id.title_score)).setText("Level "+level+": ");
 
         switch (level){
             case 1:

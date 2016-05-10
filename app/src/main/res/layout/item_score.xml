@@ -3,26 +3,39 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_weight="3"
     android:padding="16dp"
     android:background="#FFF"
     android:id="@+id/background_layout"
     >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="lugar"
-            android:textSize="20sp"
-            android:textColor="#222"
-            android:id="@+id/score_place"
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="#222"
-            android:id="@+id/score_score"
-            android:layout_marginTop="1dp"
-            />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_weight="0.4"
+        android:textColor="#222"
+        android:id="@+id/score_place"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.6"
+        android:textSize="20sp"
+        android:textColor="#222"
+        android:id="@+id/score_name"
+        />
+
+    <TextView
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:textColor="#222"
+        android:layout_gravity="center"
+        android:gravity="right"
+        android:id="@+id/score_score"
+        />
     </LinearLayout>
 
